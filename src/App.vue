@@ -5,5 +5,6 @@
   <router-view></router-view>
 </template>
 
-<style scoped>
+<style>
+@import url("@assets/scss/main.scss");
 </style>

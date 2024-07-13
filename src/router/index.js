@@ -10,6 +10,11 @@ import User from "@pages/User/User.vue";
 import CreateUser from "@pages/User/Create.vue";
 import EditUser from "@pages/User/Edit.vue";
 import InfoUser from "@pages/User/Info.vue";
+import Profile from "@pages/Profile/Profile.vue";
+import MobilePhone from "@pages/MobilePhone/MobilePhone.vue";
+import CreateMobilePhone from "@pages/MobilePhone/Create.vue";
+import EditMobilePhone from "@pages/MobilePhone/Edit.vue";
+import InfoMobilePhone from "@pages/MobilePhone/Info.vue";
 
 const routes = [
   {
@@ -25,7 +30,8 @@ const routes = [
         name: "Dashboard",
         component: Dashboard,
       },
-      //table User
+
+      //User
       {
         path: "/users",
         name: "Người dùng",
@@ -45,6 +51,35 @@ const routes = [
         path: "/editUser/:userId",
         name: "Edit User",
         component: EditUser,
+      },
+
+      //Profile
+      {
+        path: "/profile",
+        name: "Profile",
+        component: Profile,
+      },
+
+      //Mobile Phone
+      {
+        path: "/mobilePhones",
+        name: "Điện thoại",
+        component: MobilePhone
+      },
+      {
+        path: "/infoMobilePhone/:mobilePhoneId",
+        name: "Info MobilePhone",
+        component: InfoMobilePhone,
+      },
+      {
+        path: "/createMobilePhone",
+        name: "Create MobilePhone",
+        component: CreateMobilePhone,
+      },
+      {
+        path: "/editMobilePhone/:mobilePhoneId",
+        name: "Edit MobilePhone",
+        component: EditMobilePhone,
       },
     ],
   },

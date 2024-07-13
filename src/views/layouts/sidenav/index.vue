@@ -52,7 +52,7 @@ async function signOut() {
         <sidenav-item
           :class="getRoute() === 'users' ? 'active' : ''"
           to="/users"
-          navText="Người dùng"
+          navText="Người Dùng"
         >
           <template v-slot:icon>
             <font-awesome-icon :icon="['fas', 'user']" />
@@ -61,31 +61,20 @@ async function signOut() {
       </li>
       <li class="sidenav-item">
         <sidenav-item
-          :class="getRoute() === 'genres' ? 'active' : ''"
-          to="/genres"
-          navText="Thể loại"
+          :class="getRoute() === 'mobilePhones' ? 'active' : ''"
+          to="/mobilePhones"
+          navText="Điện Thoại"
         >
           <template v-slot:icon>
-            <font-awesome-icon :icon="['fas', 'table-list']" />
+            <font-awesome-icon :icon="['fas', 'mobile-screen-button']" />
           </template>
         </sidenav-item>
       </li>
       <li class="sidenav-item">
         <sidenav-item
-          :class="getRoute() === 'countries' ? 'active' : ''"
-          to="/countries"
-          navText="Quốc gia"
-        >
-          <template v-slot:icon>
-            <font-awesome-icon :icon="['fas', 'earth-americas']" />
-          </template>
-        </sidenav-item>
-      </li>
-      <li class="sidenav-item">
-        <sidenav-item
-          :class="getRoute() === 'categories' ? 'active' : ''"
-          to="/categories"
-          navText="Danh mục"
+          :class="getRoute() === 'orders' ? 'active' : ''"
+          to="/orders"
+          navText="Hoá Đơn"
         >
           <template v-slot:icon>
             <font-awesome-icon :icon="['fas', 'book']" />
@@ -94,12 +83,12 @@ async function signOut() {
       </li>
       <li class="sidenav-item">
         <sidenav-item
-          :class="getRoute() === 'movies' ? 'active' : ''"
-          to="/movies"
-          navText="Phim"
+          :class="getRoute() === 'customers' ? 'active' : ''"
+          to="/customers"
+          navText="Khách Hàng"
         >
           <template v-slot:icon>
-            <font-awesome-icon :icon="['fas', 'film']" />
+            <font-awesome-icon :icon="['fas', 'book']" />
           </template>
         </sidenav-item>
       </li>
