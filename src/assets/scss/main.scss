@@ -15,6 +15,28 @@ ol {
   list-style: none;
 }
 
+.text-12 {
+  font-size: 12px;
+}
+
+.text-14 {
+  font-size: 14px;
+}
+
+.text-16 {
+  font-size: 1rem;
+}
+
+.text-sm {
+  font-size: 1rem;
+  line-height: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .text-white {
   color: #fff;
 }
@@ -23,8 +45,16 @@ ol {
   color: #3498db;
 }
 
+.text-title{
+  color: #000000DE;
+}
+
 .text-red {
   color: #e74c3c;
+}
+
+.text-price {
+  color: #ed0000;
 }
 
 .background-default {
@@ -57,9 +87,62 @@ ol {
   border-color: rgb(63, 63, 70);
 }
 
+.form-control,
+.form-select {
+  box-shadow: none !important;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+.object-center {
+  object-position: center;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.w-7 {
+  width: 28px;
+}
+
+.w-16p {
+  width: 16%;
+}
+
+.w-33p {
+  width: 33.33333%;
+}
+
+.w-40p {
+  width: 40%;
+}
+
+.w-60p {
+  width: 60%;
+}
+
+.w-66p {
+  width: 66.66667%;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
 .h-7 {
   height: 28px;
 }
-.w-7 {
-  width: 28px;
+
+.h-24 {
+  height: 6rem;
+}
+
+.h-80 {
+  height: 20rem;
 }

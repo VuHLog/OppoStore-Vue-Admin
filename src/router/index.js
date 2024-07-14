@@ -15,6 +15,8 @@ import MobilePhone from "@pages/MobilePhone/MobilePhone.vue";
 import CreateMobilePhone from "@pages/MobilePhone/Create.vue";
 import EditMobilePhone from "@pages/MobilePhone/Edit.vue";
 import InfoMobilePhone from "@pages/MobilePhone/Info.vue";
+import Order from "@pages/Order/Order.vue";
+import OrderDetail from "@pages/Order/OrderDetail.vue";
 
 const routes = [
   {
@@ -80,6 +82,18 @@ const routes = [
         path: "/editMobilePhone/:mobilePhoneId",
         name: "Edit MobilePhone",
         component: EditMobilePhone,
+      },
+
+      //Order
+      {
+        path: "/orders",
+        name: "Đơn hàng",
+        component: Order
+      },
+      {
+        path: "/orders/:orderId/details",
+        name: "Chi tiết đơn hàng",
+        component: OrderDetail
       },
     ],
   },
