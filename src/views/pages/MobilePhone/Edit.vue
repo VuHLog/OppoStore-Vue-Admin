@@ -397,13 +397,15 @@ async function updateMobilePhone() {
           </div>
           <div class="col-md-6 text-start mb-4">
             <label for="status-text-input" class="form-label">Trạng thái</label>
-            <input
+            <select
               v-model="mobilePhone.status"
               id="status-text-input"
-              class="form-control"
-              type="text"
-              placeholder="Trạng thái"
-            />
+              class="form-select"
+            >
+              <option disabled value="">Trạng thái</option>
+              <option value="Đang kinh doanh">Đang kinh doanh</option>
+              <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
+            </select>
           </div>
           <div class="btn-group col-md-6 mb-4">
             <v-auto-complete
@@ -488,7 +490,7 @@ async function updateMobilePhone() {
               </div>
             </div>
             <div
-              class="col-md-6 table-responsive"
+              class="col-md-12 table-responsive"
               v-if="mobilePhone.variants.length > 0"
             >
               <table class="table table-striped">
