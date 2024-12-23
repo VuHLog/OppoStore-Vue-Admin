@@ -201,7 +201,7 @@ watch(search, () => {
                   <span class="text-body-table text-xs">{{ user.phone }}</span>
                 </td>
                 <td class="align-middle text-start">
-                  <template v-for="role in user.user_roles">
+                  <template v-for="role in user.user_roles" :key="role.id">
                     <p class="text-body-table text-xs mb-0 mr-3">{{ role.role.roleName }}</p>
                   </template>
                 </td>

@@ -262,7 +262,7 @@ watch(search, () => {
                 </td>
                 <td class="align-middle text-start text-sm">
                   <p class="text-xs text-body-table mb-0 text-start">
-                    <template v-for="variant in mobilePhone.variants">
+                    <template v-for="variant in mobilePhone.variants" :key="variant.id">
                       <span>
                         {{ variant.color.name + " / " +variant.rom.capacity + " GB"}}
                       </span>
@@ -301,7 +301,7 @@ watch(search, () => {
                 </td>
                 <td class="align-middle text-start text-sm">
                   <p class="text-xs text-body-table mb-0 text-start">
-                    {{ mobilePhone.brand }}
+                    {{ mobilePhone.brand.name }}
                   </p>
                 </td>
                 <td class="align-middle text-start text-sm">

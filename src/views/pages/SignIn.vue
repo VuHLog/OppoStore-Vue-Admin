@@ -72,7 +72,7 @@ async function signIn() {
       <v-col class="d-flex align-center justify-center d-none d-md-flex" md="6" sm="0">
         <div class="banner">
           <img class="w-100 rounded-lg" src="@images/signin/banner.png"
-          alt="Iflix Logo"
+          alt="Iflix Logo">
         </div>
       </v-col>
     </v-row>

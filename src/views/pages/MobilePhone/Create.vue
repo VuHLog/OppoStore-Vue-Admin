@@ -29,6 +29,7 @@ const variant = ref({
 });
 
 const colorsAvailable = ref([]);
+const brandsAvailable = ref([]);
 const CategoriesAvailable = ref([]);
 const romAvailable = ref([]);
 
@@ -37,6 +38,13 @@ onMounted(() => {
     .get("/api/colors")
     .then((res) => {
       colorsAvailable.value = res.result;
+    })
+    .catch((error) => console.log(error));
+
+  proxy.$api
+    .get("/api/brands")
+    .then((res) => {
+      brandsAvailable.value = res.result;
     })
     .catch((error) => console.log(error));
 
@@ -80,19 +88,9 @@ const errorMsgVariant = ref("");
 function isValidVariant() {
   let color = variant.value.color;
   let rom = variant.value.rom;
-  let stock = variant.value.stock;
   let price = variant.value.price;
-  if (
-    Object.keys(color).length === 0 ||
-    Object.keys(rom).length === 0 ||
-    stock.trim() === "" ||
-    price.trim() === ""
-  ) {
+  if (Object.keys(color).length === 0 || Object.keys(rom).length === 0) {
     errorMsgVariant.value = "Bạn phải nhập đầy đủ các trường của biến thể!";
-    return false;
-  }
-  if (!/^[0-9]\d*$/.test(variant.value.stock)) {
-    errorMsgVariant.value = "Số lượng tồn phải nhập là số";
     return false;
   }
   if (!/^[0-9]\d*$/.test(variant.value.price)) {
@@ -119,6 +117,13 @@ async function addVariant() {
     title: "Thêm biến thể thành công!",
     icon: "success",
   });
+
+  variant.value = {
+    color: "",
+    rom: "",
+    stock: 0,
+    price: 0,
+  };
 }
 
 //xoa bien the
@@ -158,8 +163,7 @@ function isValidMobilePhone() {
     mobilePhoneVal.weight === undefined ||
     mobilePhoneVal.weight.trim() === "" ||
     mobilePhoneVal.charger === "" ||
-    mobilePhoneVal.brand === undefined ||
-    mobilePhoneVal.brand.trim() === "" ||
+    Object.keys(mobilePhoneVal.variants).length === 0 ||
     mobilePhoneVal.status === undefined ||
     mobilePhoneVal.status.trim() === "" ||
     Object.keys(mobilePhoneVal.variants).length === 0
@@ -214,7 +218,7 @@ async function createMobilePhone() {
       </div>
     </div>
     <div class="card-body">
-      <p class="text-uppercase text-sm">Thông tin người dùng</p>
+      <p class="text-uppercase text-sm">Thông tin điện điện thoại</p>
       <form
         class="mt-8 space-y-6 mb-4"
         enctype="multipart/form-data"
@@ -377,18 +381,21 @@ async function createMobilePhone() {
             />
           </div>
           <div class="col-md-6 text-start mb-4">
-            <label for="brand-text-input" class="form-label">Thương hiệu</label>
-            <input
+            <v-auto-complete
               v-model="mobilePhone.brand"
-              id="brand-text-input"
-              class="form-control"
-              type="text"
-              placeholder="Thương hiệu"
-            />
+              :listItem="brandsAvailable"
+              label="Chọn dòng thương hiệu"
+              :isMultiple="false"
+            >
+            </v-auto-complete>
           </div>
           <div class="col-md-6 text-start mb-4">
             <label for="status-text-input" class="form-label">Trạng thái</label>
-            <select v-model="mobilePhone.status" id="status-text-input" class="form-select">
+            <select
+              v-model="mobilePhone.status"
+              id="status-text-input"
+              class="form-select"
+            >
               <option disabled value="">Trạng thái</option>
               <option value="Đang kinh doanh">Đang kinh doanh</option>
               <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
@@ -424,20 +431,6 @@ async function createMobilePhone() {
                 :title="'capacity'"
               >
               </v-auto-complete>
-            </div>
-            <div class="col-md-2 text-start">
-              <div class="mr-2">
-                <label for="stock-text-input" class="form-label"
-                  >Số lượng</label
-                >
-                <input
-                  v-model="variant.stock"
-                  id="stock-text-input"
-                  class="form-control"
-                  type="text"
-                  placeholder="Số lượng"
-                />
-              </div>
             </div>
             <div class="col-md-2 text-start mb-4">
               <div class="mr-2">
@@ -529,11 +522,6 @@ async function createMobilePhone() {
                       <td class="align-middle text-start text-sm">
                         <p class="text-xs text-body-table mb-0 text-start">
                           {{ variant.rom.capacity }}
-                        </p>
-                      </td>
-                      <td class="align-middle text-start text-sm">
-                        <p class="text-xs text-body-table mb-0 text-start">
-                          {{ variant.stock }}
                         </p>
                       </td>
                       <td class="align-middle text-start text-sm">

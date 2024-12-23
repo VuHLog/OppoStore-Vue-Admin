@@ -17,6 +17,10 @@ import EditMobilePhone from "@pages/MobilePhone/Edit.vue";
 import InfoMobilePhone from "@pages/MobilePhone/Info.vue";
 import Order from "@pages/Order/Order.vue";
 import OrderDetail from "@pages/Order/OrderDetail.vue";
+import ImportReceipt from "@pages/ImportReceipt/ImportReceipt.vue";
+import CreateImportReceipt from "@pages/ImportReceipt/Create.vue";
+import EditImportReceipt from "@pages/ImportReceipt/Edit.vue";
+import InfoImportReceipt from "@pages/ImportReceipt/Info.vue";
 
 const routes = [
   {
@@ -94,6 +98,28 @@ const routes = [
         path: "/orders/:orderId/details",
         name: "Chi tiết đơn hàng",
         component: OrderDetail
+      },
+
+      //import receipt
+      {
+        path: "/import-receipts",
+        name: "Phiếu nhập kho",
+        component: ImportReceipt
+      },
+      {
+        path: "/info-import-receipt/:importReceiptId",
+        name: "Thông tin phiếu nhập kho",
+        component: InfoImportReceipt,
+      },
+      {
+        path: "/create-import-receipt",
+        name: "Create Import Receipt",
+        component: CreateImportReceipt,
+      },
+      {
+        path: "/edit-import-receipt/:importReceiptId",
+        name: "Edit Import Receipt",
+        component: EditImportReceipt,
       },
     ],
   },

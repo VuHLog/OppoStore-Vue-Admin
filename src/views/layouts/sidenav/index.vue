@@ -30,7 +30,7 @@ async function signOut() {
   >
     <div class="sidenav-header">
       <router-link class="" to="/">
-        <img class="w-100" src="@images/logo/iflixLogo.png" alt="Iflix Logo" />
+        <img class="w-100" src="@images/logo/oppo-logo.png" alt="Iflix Logo" />
       </router-link>
     </div>
 
@@ -83,9 +83,9 @@ async function signOut() {
       </li>
       <li class="sidenav-item">
         <sidenav-item
-          :class="getRoute() === 'customers' ? 'active' : ''"
-          to="/customers"
-          navText="Khách Hàng"
+          :class="getRoute() === 'import-receipts' ? 'active' : ''"
+          to="/import-receipts"
+          navText="Phiếu nhập kho"
         >
           <template v-slot:icon>
             <font-awesome-icon :icon="['fas', 'book']" />

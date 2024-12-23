@@ -1,14 +1,12 @@
 <script setup>
 import { ref, getCurrentInstance, onMounted, watch } from "vue";
-import { inject } from "vue";
 import { useBaseStore } from "@/store/index.js";
+import { inject } from "vue";
 
 const { proxy } = getCurrentInstance();
-const store = useBaseStore();
 const swal = inject("$swal");
 
-const orders = ref([]);
-const statusAvailable = ref([]);
+const importReceipts = ref([]);
 const totalElements = ref(0);
 const totalPages = ref(0);
 const field = ref("name");
@@ -18,22 +16,19 @@ const pageNumber = ref(0);
 const search = ref("");
 
 onMounted(() => {
-  proxy.$api.get("/api/orders?customerId=8ccfa58f-4096-4717-a1e0-a3e305a6b1dd").then((res) => {
-    orders.value = res.content;
+  proxy.$api.get("/api/import-receipts").then((res) => {
+    importReceipts.value = res.content;
     totalElements.value = res.totalElements;
     totalPages.value = res.totalPages;
     pageSize.value = res.pageable.pageSize;
     pageNumber.value = res.pageable.pageNumber;
-  });
-  proxy.$api.get("/api/status").then((res) => {
-    statusAvailable.value = res.result;
   });
 });
 
 const reloadData = () => {
   proxy.$api
     .get(
-      "/api/orders?pageNumber=" +
+      "/api/import-receipts?pageNumber=" +
         pageNumber.value +
         "&pageSize=" +
         pageSize.value +
@@ -45,13 +40,38 @@ const reloadData = () => {
         search.value
     )
     .then((res) => {
-      orders.value = res.content;
+      importReceipts.value = res.content;
       totalElements.value = res.totalElements;
       totalPages.value = res.totalPages;
       pageSize.value = res.pageable.pageSize;
       pageNumber.value = res.pageable.pageNumber;
     });
 };
+
+async function deleteImportReceipt(id) {
+  swal
+    .fire({
+      title: "Bạn có chắc chắn muốn xoá không?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xoá",
+      cancelButtonText: "Huỷ bỏ",
+    })
+    .then(async (result) => {
+      if (result.isConfirmed) {
+        await proxy.$api.delete("/api/import-receipts/" + id, {}).then(() => {
+          console.log("Xoá thành công!");
+        });
+        importReceipts.value = importReceipts.value.filter((value) => value.id !== id)
+        swal.fire({
+          title: "Đã xoá!",
+          icon: "success",
+        });
+      }
+    });
+}
 
 watch(pageNumber, () => {
   reloadData();
@@ -61,83 +81,20 @@ watch(search, () => {
   pageNumber.value = 0;
   reloadData();
 });
-
-//cap nhat khi thay doi trang thai don hang
-async function updateOrderStatus(orderStatus, orderId, customer, orderDetails) {
-  await proxy.$api
-    .put("/api/orders/" + orderId + "/status", {
-      status: orderStatus,
-    })
-    .then(() => {
-      const Toast = swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 1000,
-        didOpen: (toast) => {
-          toast.onmouseenter = swal.stopTimer;
-          toast.onmouseleave = swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "success",
-        title: "Thay đổi trạng thái đơn hàng thành công!",
-      });
-    });
-
-  await proxy.$api
-    .post("/mail/send/" + customer.email, {
-      subject: "Trạng thái đơn hàng",
-      message:
-        `<div>Đơn hàng ${orderId} hiện ${orderStatus.status}</div>` +
-        orderDetails.reduce((html, orderDetail) => {
-          return (
-            html +
-            `
-              <li class="d-flex h-24 justify-space-between pt-3 pr-3">
-                <div class="d-flex h-100">
-                  <div class="h-100">
-                    <img src="${
-                      orderDetail.variant.image
-                    }" alt="" class="h-100 object-contain object-center rounded-lg d-block" />
-                  </div>
-                  <div class="h-100 pl-3">
-                    <div class="mb-1">
-                      <span>${orderDetail.variant.mobilePhone.name}</span>
-                    </div>
-                    <div class="mb-1 text-grey-lighten-1 text-14">
-                      <span>
-                        Phân loại hàng: ${orderDetail.variant.color.name}/${
-              orderDetail.variant.rom.capacity
-            }GB
-                      </span>
-                    </div>
-                    <div class="mb-1 text-14">
-                      <span> Số lượng: ${orderDetail.quantity} </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="h-100 d-flex align-center text-14">
-                  <span class="text-price font-weight-medium">
-                    ${new Intl.NumberFormat("en-DE").format(orderDetail.price)}₫
-                  </span>
-                </div>
-              </li>`
-          );
-        }, ""),
-    })
-    .then(() => {
-      console.log("successful mailing!");
-    });
-}
 </script>
 
 <template>
   <div id="" class="card">
     <div
-      class="card-header d-flex justify-start align-center mb-4 font-weight-bold"
+      class="card-header d-flex justify-space-between align-center mb-4 font-weight-bold"
     >
-      <span class="text-h5 user-none">Bảng đơn hàng</span>
+      <span class="text-h5 user-none">Bảng phiếu nhập kho</span>
+      <div class="btn btn-success">
+        <font-awesome-icon :icon="['fas', 'plus']" />
+        <router-link to="/create-import-receipt">
+          <button class="text-white" type="button">Thêm mới</button>
+        </router-link>
+      </div>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="pe-md-3 mb-8 d-flex align-items-center justify-end">
@@ -166,12 +123,17 @@ async function updateOrderStatus(orderStatus, orderId, customer, orderDetails) {
               <th
                 class="text-start text-uppercase text-head-table text-xxs font-weight-bolder opacity-7 align-top"
               >
-                Ngày đặt hàng
+                Thời điểm tạo
               </th>
               <th
                 class="text-start text-uppercase text-head-table text-xxs font-weight-bolder opacity-7 ps-2 align-top"
               >
-                Tên khách hàng
+                Ghi chú
+              </th>
+              <th
+                class="text-start text-uppercase text-head-table text-xxs font-weight-bolder align-top"
+              >
+                Nhà cung cấp
               </th>
               <th
                 class="text-start text-uppercase text-head-table text-xxs font-weight-bolder align-top"
@@ -181,12 +143,7 @@ async function updateOrderStatus(orderStatus, orderId, customer, orderDetails) {
               <th
                 class="text-start text-uppercase text-head-table text-xxs font-weight-bolder align-top"
               >
-                Trạng thái
-              </th>
-              <th
-                class="text-start text-uppercase text-head-table text-xxs font-weight-bolder align-top"
-              >
-                Ghi chú
+                Nhân viên nhập
               </th>
               <th
                 class="text-start text-uppercase text-head-table text-xxs font-weight-bolder align-top"
@@ -196,7 +153,7 @@ async function updateOrderStatus(orderStatus, orderId, customer, orderDetails) {
             </tr>
           </thead>
           <tbody>
-            <template v-for="(order, index) in orders" :key="order.id">
+            <template v-for="(importReceipt, index) in importReceipts" :key="importReceipt.id">
               <tr>
                 <td class="align-middle text-start">
                   <div class="px-2 py-1">
@@ -205,69 +162,56 @@ async function updateOrderStatus(orderStatus, orderId, customer, orderDetails) {
                 </td>
                 <td class="align-middle text-start text-sm">
                   <p class="text-xs text-body-table mb-0 text-start">
-                    {{ order.createdTime }}
-                  </p>
-                </td>
-                <td class="align-middle text-start text-sm cursor-pointer">
-                  <p class="text-xs text-body-table mb-0 text-start">
-                    {{ order.customer.name }}
-                  </p>
-                  <v-tooltip activator="parent" location="bottom">
-                    <p>Tên: {{ order.customer.name }}</p>
-                    <p>Địa chỉ: {{ order.customer.address }}</p>
-                    <p>SĐT: {{ order.customer.phone }}</p>
-                    <p>Email: {{ order.customer.email }}</p>
-                  </v-tooltip>
-                </td>
-                <td class="align-middle text-start text-sm">
-                  <p class="text-xs text-body-table mb-0 text-start">
-                    {{
-                      new Intl.NumberFormat("en-DE").format(order.totalPrice) +
-                      "₫"
-                    }}
+                    {{ importReceipt.createdTime }}
                   </p>
                 </td>
                 <td class="align-middle text-start text-sm">
-                  <select
-                    @change="
-                      updateOrderStatus(
-                        order.status,
-                        order.id,
-                        order.customer,
-                        order.orderDetails
-                      )
-                    "
-                    v-model="order.status"
-                    id="status-text-input text-xs text-body-table mb-0 text-start"
-                    class="form-select"
-                  >
-                    <option disabled value="">{{ order.status.status }}</option>
-                    <template
-                      v-for="status in statusAvailable"
-                      :key="status.id"
-                    >
-                      <option :value="status">
-                        {{ status.status }}
-                      </option>
-                    </template>
-                  </select>
+                  <p class="text-xs text-body-table mb-0 text-start">
+                    {{ importReceipt.note }}
+                  </p>
                 </td>
                 <td class="align-middle text-start text-sm">
                   <p class="text-xs text-body-table mb-0 text-start">
-                    {{ order.note }}
+                    {{ importReceipt.supplierName }}
+                  </p>
+                </td>
+                <td class="align-middle text-start text-sm">
+                  <p class="text-xs text-body-table mb-0 text-start">
+                    {{ importReceipt.totalPrice }}
+                  </p>
+                </td>
+                <td class="align-middle text-start text-sm">
+                  <p class="text-xs text-body-table mb-0 text-start">
+                    {{ importReceipt.user.fullName }}
                   </p>
                 </td>
                 <td class="align-middle text-start">
                   <div class="d-flex">
-                    <div class="cursor-pointer ml-4">
+                    <div class="icon-edit">
+                      <router-link :to="'/edit-import-receipt/' + importReceipt.id">
+                        <font-awesome-icon :icon="['fas', 'pen-to-square']" />
+                      </router-link>
+                      <v-tooltip activator="parent" location="bottom">
+                        Chỉnh sửa
+                      </v-tooltip>
+                    </div>
+                    <div class="icon-delete cursor-pointer ml-4">
+                      <div class="text-red" @click="deleteImportReceipt(importReceipt.id)">
+                        <font-awesome-icon :icon="['fas', 'trash-can']" />
+                      </div>
+                      <v-tooltip activator="parent" location="bottom">
+                        Xoá
+                      </v-tooltip>
+                    </div>
+                    <div class=" cursor-pointer ml-4">
                       <router-link
                         class="text-info"
-                        :to="'/orders/' + order.id + '/details'"
+                        :to="'/info-import-receipt/' + importReceipt.id"
                       >
                         <font-awesome-icon :icon="['fas', 'info']" />
                       </router-link>
                       <v-tooltip activator="parent" location="bottom">
-                        Chi tiết đơn hàng
+                        Thông tin
                       </v-tooltip>
                     </div>
                   </div>

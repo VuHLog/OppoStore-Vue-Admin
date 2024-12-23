@@ -116,7 +116,7 @@ function returnTable() {
         <li class="bg-grey-lighten-2 d-table py-1 w-100">
           <span class="d-table-cell w-25 py-1 px-2">Thương hiệu:</span>
           <div class="d-table-cell">
-            {{ mobilePhone.brand }}
+            {{ mobilePhone.name }}
           </div>
         </li>
         <li class="d-table py-1 w-100">
@@ -131,6 +131,7 @@ function returnTable() {
               <v-carousel-item :src="variant.image">
                 <div class="position-absolute top-0 left-0 px-2">
                   <span>{{ variant.color.name + " / " +variant.rom.capacity + " GB"}}</span>
+                  <p>Tồn kho: {{ variant.stock}}</p>
                 </div>
               </v-carousel-item>
             </template>
